@@ -1,6 +1,7 @@
 # Laporan Kebencanaan
 
 Proyek ini adalah sistem pelaporan kebencanaan yang memungkinkan pengguna untuk melaporkan kejadian bencana dan melihat daftar jenis bencana yang terjadi.
+Proyek ini adalah pelengkap untuk tugas capstone SIB Dicoding Cycle 6
 
 ## Deskripsi
 
