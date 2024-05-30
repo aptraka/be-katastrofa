@@ -4,7 +4,7 @@ const connection = require("./db");
 const handleAddReport = async (request, handlers) => {
   const { disasterTypeId, longitude, latitude, incidentTime, description, userId } = request.payload;
 
-  const query = 'INSERT INTO DisasterReports (disaster_type_id, longitude, latitude, incident_time, description, user_id) VALUES (?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO DisasterReports (disaster_type_id, longitude, latitude, incident_time, description, status) VALUES (?, ?, ?, ?, ?, ?)';
   const values = [disasterTypeId, longitude, latitude, incidentTime, description, userId];
 
   try {
