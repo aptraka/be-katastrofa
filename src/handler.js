@@ -32,8 +32,11 @@ const handleGetAllReports = async (request, handlers) => {
 
   try {
     const [results] = await connection.query(query);
+    const totalData = results.length;
+
     const response = handlers.response({
       status: "success",
+      count: totalData,
       data: {
         reports: results,
       },
