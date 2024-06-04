@@ -2,10 +2,10 @@ const connection = require("./db");
 
 // Handler untuk menambahkan laporan kebencanaan baru
 const handleAddReport = async (request, handlers) => {
-  const { disasterTypeId, longitude, latitude, incidentTime, description, userId } = request.payload;
+  const { disasterTypeId, longitude, latitude, incidentTime, description} = request.payload;
 
-  const query = 'INSERT INTO DisasterReports (disaster_type_id, longitude, latitude, incident_time, description, status) VALUES (?, ?, ?, ?, ?, ?)';
-  const values = [disasterTypeId, longitude, latitude, incidentTime, description, userId];
+  const query = `INSERT INTO DisasterReports (disaster_type_id, longitude, latitude, incident_time, description) VALUES (?,?,?,?,?)`;
+  const values = [disasterTypeId, longitude, latitude, incidentTime, description];
 
   try {
     await connection.query(query, values);
@@ -20,6 +20,7 @@ const handleAddReport = async (request, handlers) => {
     const response = handlers.response({
       status: "fail",
       message: "Gagal menambahkan laporan kebencanaan",
+      error: error
     });
     response.code(500);
     return response;
@@ -121,16 +122,30 @@ const handleGetReportById = async (request, handlers) => {
         });
         response.code(404);
         return response;
+      }else{
+        let dataComment="";
+        const queryComment = 'SELECT * FROM Comments WHERE idReport = ?';
+        const valuesComment = [id];
+        try {
+          const [resultComments] = await connection.query(queryComment, valuesComment);
+          dataComment = resultComments
+        } catch (error) {
+          dataComment = error
+        }
+
+        const response = handlers.response({
+          status: "success",
+          data: {
+            report: results[0],
+            dataComments: {
+              total: dataComment.length,
+              comments: dataComment
+            }
+          },
+        });
+        response.code(200);
+        return response;
       }
-      
-      const response = handlers.response({
-        status: "success",
-        data: {
-          report: results[0],
-        },
-      });
-      response.code(200);
-      return response;
     } catch (error) {
       console.error("Error fetching report by id:", error);
       const response = handlers.response({
@@ -178,6 +193,32 @@ const handleGetReportById = async (request, handlers) => {
       return response;
     }
   };
+
+  const handleAddComment = async (request, handlers) => {
+    const { idReport, name, comment} = request.payload;
+  
+    const query = `INSERT INTO Comments (id_report, nama, komentar) VALUES (?,?,?)`;
+    const values = [idReport, name, comment];
+  
+    try {
+      await connection.query(query, values);
+      const response = handlers.response({
+        status: "success",
+        message: "Komentar berhasil ditambahkan",
+      });
+      response.code(201);
+      return response;
+    } catch (error) {
+      console.error("Error adding report:", error);
+      const response = handlers.response({
+        status: "fail",
+        message: "Gagal menambahkan komentar",
+        error: error
+      });
+      response.code(500);
+      return response;
+    }
+  };
   
   module.exports = {
     handleAddReport,
@@ -186,5 +227,6 @@ const handleGetReportById = async (request, handlers) => {
     handleGetAllDisasterTypes,
     handleGetReportById,
     handleGetDisasterTypeById,
+    handleAddComment,
   };
   

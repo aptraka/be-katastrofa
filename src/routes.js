@@ -5,6 +5,7 @@ const {
     handleGetAllDisasterTypes,
     handleGetReportById,
     handleGetDisasterTypeById,
+    handleAddComment,
   } = require('./handler');
   
   const routes = [
@@ -37,6 +38,11 @@ const {
       method: 'GET',
       path: '/disaster-types/{id}',
       handler: handleGetDisasterTypeById,
+    },
+    {
+      method: 'POST',
+      path: '/comment',
+      handler: handleAddComment,
     },
   ];
   
