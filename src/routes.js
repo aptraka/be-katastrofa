@@ -6,6 +6,7 @@ const {
     handleGetReportById,
     handleGetDisasterTypeById,
     handleAddComment,
+    handleGetAllNews,
   } = require('./handler');
   
   const routes = [
@@ -43,6 +44,11 @@ const {
       method: 'POST',
       path: '/comment',
       handler: handleAddComment,
+    },
+    {
+      method: 'GET',
+      path: '/news',
+      handler: handleGetAllNews,
     },
   ];
   
